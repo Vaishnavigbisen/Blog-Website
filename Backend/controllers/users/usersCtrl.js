@@ -1,5 +1,6 @@
 const expressAsyncHandler = require('express-async-handler');
 const sgMail = require('@sendgrid/mail');
+const fs = require('fs');
 const crypto = require('crypto');
 const generateToken = require('../../config/token/generateToken');
 const User = require('../../model/user/User');
@@ -278,8 +279,8 @@ const generateVerificationTokenCtrl = expressAsyncHandler(async (req, res) => {
 
     const resetURL = `If you were requested to verify your account, verify now within 10 minutes, otherwise ignore this message <a href="http://localhost:3000/verify-account/${verificationToken}">Click to verify your account</a>`;
     const msg = {
-      to: 'ffdfd@gmail.com',
-      from: 'twentekghana@gmail.com',
+      to: 'bisentanvi@gmail.com',
+      from: 'bisenvaishnavi2021@gmail.com',
       subject: 'Verify your account',
       html: resetURL,
     };
@@ -388,7 +389,9 @@ const profilePhotoUploadCtrl = expressAsyncHandler(async (req, res) => {
     },
     { new: true }
   );
-  res.json(foundUser);
+  //remove the saved img
+  fs.unlinkSync(localPath);
+  res.json(imgUploaded);
 });
 
 module.exports = {
