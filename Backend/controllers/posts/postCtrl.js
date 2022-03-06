@@ -77,4 +77,35 @@ const fetchPostCtrl = expressAsyncHandler(async (req, res) => {
   }
 });
 
-module.exports = { createPostCtrl, fetchPostsCtrl, fetchPostCtrl };
+//------------------------------
+// Update post
+//------------------------------
+
+const updatePostCtrl = expressAsyncHandler(async (req, res) => {
+  console.log(req.user);
+  const { id } = req.params;
+  validateMongodbId(id);
+
+  try {
+    const post = await Post.findByIdAndUpdate(
+      id,
+      {
+        ...req.body,
+        user: req.user?._id,
+      },
+      {
+        new: true,
+      }
+    );
+    res.json(post);
+  } catch (error) {
+    res.json(error);
+  }
+});
+
+module.exports = {
+  updatePostCtrl,
+  createPostCtrl,
+  fetchPostsCtrl,
+  fetchPostCtrl,
+};
