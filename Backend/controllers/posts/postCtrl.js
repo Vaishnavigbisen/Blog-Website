@@ -63,6 +63,14 @@ const fetchPostCtrl = expressAsyncHandler(async (req, res) => {
   validateMongodbId(id);
   try {
     const post = await Post.findById(id).populate('user');
+    //update number of views
+    await Post.findByIdAndUpdate(
+      id,
+      {
+        $inc: { numViews: 1 },
+      },
+      { new: true }
+    );
     res.json(post);
   } catch (error) {
     res.json(error);
