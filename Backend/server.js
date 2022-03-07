@@ -1,5 +1,6 @@
 const express = require('express');
 const dotenv = require('dotenv');
+const cors = require('cors');
 dotenv.config();
 const dbConnect = require('./config/db/dbConnect');
 const userRoutes = require('./route/users/usersRoute');
@@ -15,7 +16,8 @@ dbConnect();
 
 //Middleware
 app.use(express.json());
-
+//cors
+app.use(cors());
 //Users route
 app.use('/api/users', userRoutes);
 //Post route
@@ -33,3 +35,5 @@ app.use(errorHandler);
 //server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, console.log(`Server is running ${PORT}`));
+
+//

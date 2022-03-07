@@ -1,6 +1,9 @@
 import React from 'react';
 import { useFormik } from 'formik';
+import { Redirect } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import * as Yup from 'yup';
+import { registerUserAction } from '../../../redux/slices/users/usersSlices';
 
 //Form schema
 const formSchema = Yup.object({
@@ -13,6 +16,9 @@ const formSchema = Yup.object({
 //Register
 //-------------------------------
 const Register = () => {
+  //dispath
+  const dispatch = useDispatch();
+
   //formik
   const formik = useFormik({
     initialValues: {
@@ -22,10 +28,21 @@ const Register = () => {
       password: '',
     },
     onSubmit: (values) => {
+      //dispath the action
+      dispatch(registerUserAction(values));
       console.log(values);
     },
     validationSchema: formSchema,
   });
+
+  //select state from store
+  const storeData = useSelector((store) => store?.users);
+  const { loading, appErr, serverErr, registered } = storeData;
+
+  //redirect
+  if (registered) {
+    return <Redirect to='/profile' />;
+  }
 
   return (
     <section className='relative py-20 2xl:py-40 bg-gray-800 overflow-hidden'>
@@ -38,7 +55,7 @@ const Register = () => {
                   Register Account
                 </span>
                 <h2 className='mt-8 mb-12 text-5xl font-bold font-heading text-white'>
-                  Create an account and start writing down your ideas
+                  Create an account and start pending down your ideas
                 </h2>
               </div>
             </div>
@@ -47,7 +64,14 @@ const Register = () => {
                 <form onSubmit={formik.handleSubmit}>
                   <h3 className='mb-10 text-2xl text-white font-bold font-heading'>
                     Register Account
+                    {/* display error message*/}
+                    {appErr || serverErr ? (
+                      <div className='text-red-400'>
+                        {serverErr} {appErr}
+                      </div>
+                    ) : null}
                   </h3>
+
                   {/* First name */}
                   <div className='flex items-center pl-6 mb-3 bg-white rounded-full'>
                     <span className='inline-block pr-3 py-2 border-r border-gray-50'>
@@ -243,12 +267,22 @@ const Register = () => {
 
                   <div className='inline-flex mb-10'></div>
 
-                  <button
-                    type='submit'
-                    className='py-4 w-full bg-purple-500 hover:bg-blue-600 text-white font-bold rounded-full transition duration-200'
-                  >
-                    Register
-                  </button>
+                  {/* Check for loading */}
+                  {loading ? (
+                    <button
+                      disabled
+                      className='py-4 w-full bg-gray-500  text-white font-bold rounded-full transition duration-200'
+                    >
+                      loading please wait...
+                    </button>
+                  ) : (
+                    <button
+                      type='submit'
+                      className='py-4 w-full bg-purple-500 hover:bg-blue-600 text-white font-bold rounded-full transition duration-200'
+                    >
+                      Register
+                    </button>
+                  )}
                 </form>
               </div>
             </div>
