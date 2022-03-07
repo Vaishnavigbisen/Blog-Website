@@ -1,5 +1,6 @@
 import React from 'react';
 import poster from '../../img/poster.png';
+
 const HomePage = () => {
   return (
     <>

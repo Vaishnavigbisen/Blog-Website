@@ -1,11 +1,17 @@
-import { configureStore } from '@reduxjs/toolkit';
-import usersReducer from '../slices/users/usersSlices';
-import categoriesReducer from '../slices/category/categorySlice';
-const store = configureStore({
+import { configureStore } from "@reduxjs/toolkit";
+import usersReducers from "../slices/users/usersSlices";
+import postsReducers from "../slices/posts/postSlices";
+import commentReducers from "../slices/comments/commentSlices";
+import categoriesReducer from "../slices/categories/categoriesSlices";
+import emailReducer from "../slices/sendEmail/sendEmailSlices";
+
+export default configureStore({
   reducer: {
-    users: usersReducer,
-    category: categoriesReducer,
+    // user
+    user: usersReducers,
+    posts: postsReducers,
+    comments: commentReducers,
+    categories: categoriesReducer,
+    email: emailReducer,
   },
 });
-
-export default store;
