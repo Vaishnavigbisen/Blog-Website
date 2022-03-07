@@ -19,6 +19,9 @@ import UpdateProfileForm from "./components/Users/Profile/UpdateProfileForm";
 import SendEmail from "./components/Users/Emailing/SendEmail";
 import AccountVerified from "./components/Users/AccountVerification/AccountVerified";
 import UsersList from "./components/Users/UsersList/UsersList";
+import UpdatePassword from "./components/Users/PasswordManagement/UpdatePassword";
+import ResetPasswordForm from "./components/Users/PasswordManagement/ResetPasswordForm";
+import ResetPassword from "./components/Users/PasswordManagement/ResetPassword";
 
 function App() {
   return (
@@ -30,11 +33,23 @@ function App() {
           path="/update-category/:id"
           component={UpdateCategory}
         />
+        <Route
+          exact
+          path="/password-reset-token"
+          component={ResetPasswordForm}
+        />
+        <Route exact path="/reset-password/:token" component={ResetPassword} />
         <AdminRoute exact path="/users" component={UsersList} />
         <PrivateProtectRoute
           exact
           path="/upload-profile-photo"
           component={UploadProfilePhoto}
+        />
+
+        <PrivateProtectRoute
+          exact
+          path="/update-password"
+          component={UpdatePassword}
         />
 
         <PrivateProtectRoute

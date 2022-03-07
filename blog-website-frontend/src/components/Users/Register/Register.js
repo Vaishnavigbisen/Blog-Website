@@ -55,7 +55,7 @@ const Register = () => {
                   Register Account
                 </span>
                 <h2 className='mt-8 mb-12 text-5xl font-bold font-heading text-white'>
-                  Create an account and start pending down your ideas
+                  Create an account and start writing down your ideas
                 </h2>
               </div>
             </div>

@@ -38,7 +38,7 @@ export default function Profile(props) {
   useEffect(() => {
     dispatch(userProfileAction(id));
   }, [id, dispatch, followed, unFollowed]);
-  console.log(profile?.viewedBy);
+
   //send mail handle click
   const sendMailNavigate = () => {
     history.push({
@@ -53,7 +53,7 @@ export default function Profile(props) {
   //isLogin
 
   const isLoginUser = userAuth?._id === profile?._id;
-  console.log(isLoginUser);
+
   return (
     <>
       <div className='min-h-screen bg-gray-600 flex justify-center items-center'>
@@ -130,16 +130,18 @@ export default function Profile(props) {
 
                               {/* is login user */}
                               {/* Upload profile photo */}
-                              <Link
-                                to={`/upload-profile-photo`}
-                                className='inline-flex justify-center w-48 px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500'
-                              >
-                                <UploadIcon
-                                  className='-ml-1 mr-2 h-5 w-5 text-gray-400'
-                                  aria-hidden='true'
-                                />
-                                <span>Upload Photo</span>
-                              </Link>
+                              {isLoginUser && (
+                                <Link
+                                  to={`/upload-profile-photo`}
+                                  className='inline-flex justify-center w-48 px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500'
+                                >
+                                  <UploadIcon
+                                    className='-ml-1 mr-2 h-5 w-5 text-gray-400'
+                                    aria-hidden='true'
+                                  />
+                                  <span>Upload Photo</span>
+                                </Link>
+                              )}
                             </div>
 
                             <div className='mt-6 flex flex-col justify-stretch space-y-3 sm:flex-row sm:space-y-0 sm:space-x-4'>
@@ -184,16 +186,18 @@ export default function Profile(props) {
                               {/* Update Profile */}
 
                               <>
-                                <Link
-                                  to={`/update-profile/${profile?._id}`}
-                                  className='inline-flex justify-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500'
-                                >
-                                  <UserIcon
-                                    className='-ml-1 mr-2 h-5 w-5 text-gray-400'
-                                    aria-hidden='true'
-                                  />
-                                  <span>Update Profile</span>
-                                </Link>
+                                {isLoginUser && (
+                                  <Link
+                                    to={`/update-profile/${profile?._id}`}
+                                    className='inline-flex justify-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500'
+                                  >
+                                    <UserIcon
+                                      className='-ml-1 mr-2 h-5 w-5 text-gray-400'
+                                      aria-hidden='true'
+                                    />
+                                    <span>Update Profile</span>
+                                  </Link>
+                                )}
                               </>
                               {/* Send Mail */}
                               <button

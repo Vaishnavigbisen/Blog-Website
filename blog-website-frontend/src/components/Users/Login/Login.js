@@ -1,6 +1,6 @@
 import React from 'react';
 import { useFormik } from 'formik';
-import { Redirect } from 'react-router-dom';
+import { Redirect, Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Yup from 'yup';
 import poster from '../../../img/poster.png';
@@ -143,10 +143,18 @@ const Login = () => {
                       </button>
                     )}
                   </form>
+                  <div className='p-2'>
+                    <Link
+                      to='/password-reset-token'
+                      className='font-medium text-indigo-600 hover:text-indigo-500'
+                    >
+                      Forget Password ?
+                    </Link>
+                  </div>
                 </div>
               </div>
               <div className='w-full lg:w-3/5 px-4 mb-16 lg:mb-0 order-first lg:order-last'>
-                <span className='flex mb-10 mx-auto items-center justify-center h-20 w-20 bg-purple-500 rounded-lg'>
+                <span className='flex mb-10 mx-auto items-center justify-center h-20 w-20 bg-blue-500 rounded-lg'>
                   <svg
                     width='37'
                     height='37'
