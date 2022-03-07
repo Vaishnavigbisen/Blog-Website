@@ -1,6 +1,7 @@
 /* This example requires Tailwind CSS v2.0+ */
 import { Fragment } from 'react';
 import { Disclosure, Menu, Transition } from '@headlessui/react';
+import { useDispatch } from 'react-redux';
 
 import { Link } from 'react-router-dom';
 import {
@@ -11,6 +12,7 @@ import {
   LogoutIcon,
 } from '@heroicons/react/outline';
 import { PlusIcon } from '@heroicons/react/solid';
+import { logoutAction } from '../../../redux/slices/users/usersSlices';
 
 const navigation = [
   { name: 'Home', href: '/', current: true },
@@ -25,13 +27,14 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
 }
 
-const AdminNavbar = () => {
+const AdminNavbar = ({ isLogin }) => {
   //Navigation
   const userNavigation = [
     { name: 'Your Profile', href: `/profile` },
     { name: 'Change your password', href: '/update-password' },
   ];
-
+  //logout
+  const dispatch = useDispatch();
   return (
     <Disclosure as='nav' className='bg-purple-800'>
       {({ open }) => (
@@ -88,6 +91,7 @@ const AdminNavbar = () => {
                   </Link>
                   {/* Logout */}
                   <button
+                    onClick={() => dispatch(logoutAction())}
                     type='button'
                     className='relative inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-red-500 hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-indigo-500'
                   >
@@ -108,7 +112,7 @@ const AdminNavbar = () => {
                             <span className='sr-only'>Open user menu</span>
                             <img
                               className='h-8 w-8 rounded-full'
-                              // src={userAuth?.profilePhoto}
+                              src={isLogin?.profilePhoto}
                               alt='Admin Profile'
                             />
                           </Menu.Button>

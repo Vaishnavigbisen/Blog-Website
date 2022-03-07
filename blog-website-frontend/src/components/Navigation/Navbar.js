@@ -1,13 +1,16 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import AdminNavbar from "./AdminNavbar/AdminNavbar";
-import PrivateNavbar from "./PrivateNavbar/PrivateNavbar";
-import PublicNavbar from "./PubicNavbar/PublicNavbar";
+
+import AdminNavbar from "./Admin/AdminNavbar";
+import PrivateNavbar from "./Private/PrivateNavbar";
+import PublicNavbar from "./Public/PublicNavbar";
 
 const Navbar = () => {
-  const user = useSelector((state) => state?.user);
-  const { userAuth } = user;
+  //ge user from store
+  const state = useSelector(state => state.users);
+  const { userAuth } = state;
   const isAdmin = userAuth?.isAdmin;
+  console.log(isAdmin);
   return (
     <>
       {isAdmin ? (
