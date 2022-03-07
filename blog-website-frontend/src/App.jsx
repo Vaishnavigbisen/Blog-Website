@@ -13,6 +13,9 @@ import PostsList from "./components/Posts/PostsList";
 import PostDetails from "./components/Posts/PostDetails";
 import UpdatePost from "./components/Posts/UpdatePost";
 import UpdateComment from "./components/Comments/UpdateComment";
+import Profile from "./components/Users/Profile/Profile";
+import UploadProfilePhoto from "./components/Users/Profile/UploadProfilePhoto";
+import UpdateProfileForm from "./components/Users/Profile/UpdateProfileForm";
 
 function App() {
   return (
@@ -26,9 +29,20 @@ function App() {
         />
         <PrivateProtectRoute
           exact
+          path="/upload-profile-photo"
+          component={UploadProfilePhoto}
+        />
+        <PrivateProtectRoute
+          exact
+          path="/update-profile/:id"
+          component={UpdateProfileForm}
+        />
+        <PrivateProtectRoute
+          exact
           path="/update-post/:id"
           component={UpdatePost}
         />
+        <PrivateProtectRoute exact path="/profile/:id" component={Profile} />
         <PrivateProtectRoute exact path="/create-post" component={CreatePost} />
         <PrivateProtectRoute
           exact

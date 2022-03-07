@@ -146,7 +146,7 @@ const Login = () => {
                 </div>
               </div>
               <div className='w-full lg:w-3/5 px-4 mb-16 lg:mb-0 order-first lg:order-last'>
-                <span className='flex mb-10 mx-auto items-center justify-center h-20 w-20 bg-purple-500 rounded-lg'>
+                <span className='flex mb-10 mx-auto items-center justify-center h-20 w-20 bg-blue-500 rounded-lg'>
                   <svg
                     width='37'
                     height='37'
