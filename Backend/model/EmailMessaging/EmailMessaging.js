@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const emailMsgSchema = new mongoose.Schema(
   {
@@ -20,7 +20,7 @@ const emailMsgSchema = new mongoose.Schema(
     },
     sentBy: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
+      ref: "User",
       required: true,
     },
     isFlagged: {
@@ -33,6 +33,6 @@ const emailMsgSchema = new mongoose.Schema(
   }
 );
 
-const EmailMsg = mongoose.model('EmailMsg', emailMsgSchema);
+const EmailMsg = mongoose.model("EmailMsg", emailMsgSchema);
 
 module.exports = EmailMsg;

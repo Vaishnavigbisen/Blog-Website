@@ -1,17 +1,19 @@
-const expressAsyncHandler = require('express-async-handler');
-const Filter = require('bad-words');
-const fs = require('fs');
-const Post = require('../../model/post/Post');
-const validateMongodbId = require('../../utils/validateMongodbID');
-const User = require('../../model/user/User');
-const cloudinaryUploadImg = require('../../utils/cloudinary');
+const expressAsyncHandler = require("express-async-handler");
+const Filter = require("bad-words");
+const fs = require("fs");
+const Post = require("../../model/post/Post");
+const validateMongodbId = require("../../utils/validateMongodbID");
+const User = require("../../model/user/User");
+const cloudinaryUploadImg = require("../../utils/cloudinary");
+const blockUser = require("../../utils/blockUser");
 
 //----------------------------------------------------------------
 //CREATE POST
 //----------------------------------------------------------------
 const createPostCtrl = expressAsyncHandler(async (req, res) => {
-  console.log(req.file);
   const { _id } = req.user;
+  //block user
+  blockUser(req.user);
   //   validateMongodbId(req.body.user);
   //Check for bad words
   const filter = new Filter();
@@ -22,23 +24,23 @@ const createPostCtrl = expressAsyncHandler(async (req, res) => {
       isBlocked: true,
     });
     throw new Error(
-      'Creating Failed because it contains profane words and you have been blocked'
+      "Creating Failed because it contains profane words and you have been blocked"
     );
   }
 
-  //1. Get the oath to img
+  // //1. Get the path to img
   const localPath = `public/images/posts/${req.file.filename}`;
-  //2.Upload to cloudinary
+  // //2.Upload to cloudinary
   const imgUploaded = await cloudinaryUploadImg(localPath);
   try {
-    // const post = await Post.create({
-    //   ...req.body,
-    //   image: imgUploaded?.url,
-    //   user: _id,
-    // });
-    res.json(imgUploaded);
+    const post = await Post.create({
+      ...req.body,
+      user: _id,
+      image: imgUploaded?.url,
+    });
     //Remove uploaded img
     fs.unlinkSync(localPath);
+    res.json(post);
   } catch (error) {
     res.json(error);
   }
@@ -48,10 +50,26 @@ const createPostCtrl = expressAsyncHandler(async (req, res) => {
 //Fetch al posts
 //-------------------------------
 const fetchPostsCtrl = expressAsyncHandler(async (req, res) => {
+  const hasCategory = req.query.category;
   try {
-    const posts = await Post.find({}).populate('user');
-    res.json(posts);
-  } catch (error) {}
+    //Check if it has a category
+    if (hasCategory) {
+      const posts = await Post.find({ category: hasCategory })
+        .populate("user")
+        .populate("comments")
+        .sort("-createdAt");
+
+      res.json(posts);
+    } else {
+      const posts = await Post.find({})
+        .populate("user")
+        .populate("comments")
+        .sort("-createdAt");
+      res.json(posts);
+    }
+  } catch (error) {
+    res.json(error);
+  }
 });
 
 //------------------------------
@@ -63,9 +81,10 @@ const fetchPostCtrl = expressAsyncHandler(async (req, res) => {
   validateMongodbId(id);
   try {
     const post = await Post.findById(id)
-      .populate('user')
-      .populate('disLikes')
-      .populate('likes');
+      .populate("user")
+      .populate("disLikes")
+      .populate("likes")
+      .populate("comments");
     //update number of views
     await Post.findByIdAndUpdate(
       id,
@@ -135,7 +154,7 @@ const toggleAddLikeToPostCtrl = expressAsyncHandler(async (req, res) => {
   const isLiked = post?.isLiked;
   //4.Chech if this user has dislikes this post
   const alreadyDisliked = post?.disLikes?.find(
-    (userId) => userId?.toString() === loginUserId?.toString()
+    userId => userId?.toString() === loginUserId?.toString()
   );
   //5.remove the user from dislikes array if exists
   if (alreadyDisliked) {
@@ -189,7 +208,7 @@ const toggleAddDislikeToPostCtrl = expressAsyncHandler(async (req, res) => {
   const isDisLiked = post?.isDisLiked;
   //4. Check if already like this post
   const alreadyLiked = post?.likes?.find(
-    (userId) => userId.toString() === loginUserId?.toString()
+    userId => userId.toString() === loginUserId?.toString()
   );
   //Remove this user from likes array if it exists
   if (alreadyLiked) {

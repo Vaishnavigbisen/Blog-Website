@@ -1,19 +1,19 @@
-const multer = require('multer');
-const sharp = require('sharp');
-const path = require('path');
+const multer = require("multer");
+const sharp = require("sharp");
+const path = require("path");
 //storage
 const multerStorage = multer.memoryStorage();
 
 //file type checking
 const multerFilter = (req, file, cb) => {
   //check file type
-  if (file.mimetype.startsWith('image')) {
+  if (file.mimetype.startsWith("image")) {
     cb(null, true);
   } else {
     //rejected files
     cb(
       {
-        message: 'Unsupported file format',
+        message: "Unsupported file format",
       },
       false
     );
@@ -34,7 +34,7 @@ const profilePhotoResize = async (req, res, next) => {
 
   await sharp(req.file.buffer)
     .resize(250, 250)
-    .toFormat('jpeg')
+    .toFormat("jpeg")
     .jpeg({ quality: 90 })
     .toFile(path.join(`public/images/profile/${req.file.filename}`));
   next();
@@ -48,7 +48,7 @@ const postImgResize = async (req, res, next) => {
 
   await sharp(req.file.buffer)
     .resize(500, 500)
-    .toFormat('jpeg')
+    .toFormat("jpeg")
     .jpeg({ quality: 90 })
     .toFile(path.join(`public/images/posts/${req.file.filename}`));
   next();

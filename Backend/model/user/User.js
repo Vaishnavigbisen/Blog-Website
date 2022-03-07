@@ -1,32 +1,32 @@
-const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
-const crypto = require('crypto');
+const mongoose = require("mongoose");
+const bcrypt = require("bcryptjs");
+const crypto = require("crypto");
 //create schema
 const userSchema = new mongoose.Schema(
   {
     firstName: {
-      required: [true, 'First name is required'],
+      required: [true, "First name is required"],
       type: String,
     },
     lastName: {
-      required: [true, 'Last name is required'],
+      required: [true, "Last name is required"],
       type: String,
     },
     profilePhoto: {
       type: String,
       default:
-        'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png',
+        "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png",
     },
     email: {
       type: String,
-      required: [true, 'Email is required'],
+      required: [true, "Email is required"],
     },
     bio: {
       type: String,
     },
     password: {
       type: String,
-      required: [true, 'Hei buddy Password is required'],
+      required: [true, "Hei buddy Password is required"],
     },
     postCount: {
       type: Number,
@@ -42,7 +42,7 @@ const userSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      enum: ['Admin', 'Guest', 'Blogger'],
+      enum: ["Admin", "Guest", "Blogger"],
     },
     isFollowing: {
       type: Boolean,
@@ -60,7 +60,7 @@ const userSchema = new mongoose.Schema(
       type: [
         {
           type: mongoose.Schema.Types.ObjectId,
-          ref: 'User',
+          ref: "User",
         },
       ],
     },
@@ -69,7 +69,7 @@ const userSchema = new mongoose.Schema(
       type: [
         {
           type: mongoose.Schema.Types.ObjectId,
-          ref: 'User',
+          ref: "User",
         },
       ],
     },
@@ -77,7 +77,7 @@ const userSchema = new mongoose.Schema(
       type: [
         {
           type: mongoose.Schema.Types.ObjectId,
-          ref: 'User',
+          ref: "User",
         },
       ],
     },
@@ -102,15 +102,21 @@ const userSchema = new mongoose.Schema(
 );
 
 //virtual method to populate created post
-userSchema.virtual('posts', {
-  ref: 'Post',
-  foreignField: 'user',
-  localField: '_id',
+userSchema.virtual("posts", {
+  ref: "Post",
+  foreignField: "user",
+  localField: "_id",
+});
+
+//Account Type
+userSchema.virtual("accountType").get(function () {
+  const totalFollowers = this.followers?.length;
+  return totalFollowers >= 5 ? "Pro Account" : "Starter Account";
 });
 
 //Hash password
-userSchema.pre('save', async function (next) {
-  if (!this.isModified('password')) {
+userSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) {
     next();
   }
   //hash password
@@ -127,11 +133,11 @@ userSchema.methods.isPasswordMatched = async function (enteredPassword) {
 //Verify account
 userSchema.methods.createAccountVerificationToken = async function () {
   //create a token
-  const verificationToken = crypto.randomBytes(32).toString('hex');
+  const verificationToken = crypto.randomBytes(32).toString("hex");
   this.accountVerificationToken = crypto
-    .createHash('sha256')
+    .createHash("sha256")
     .update(verificationToken)
-    .digest('hex');
+    .digest("hex");
   this.accountVerificationTokenExpires = Date.now() + 30 * 60 * 1000; //10 minutes
   return verificationToken;
 };
@@ -139,16 +145,16 @@ userSchema.methods.createAccountVerificationToken = async function () {
 //Password reset/forget
 
 userSchema.methods.createPasswordResetToken = async function () {
-  const resetToken = crypto.randomBytes(32).toString('hex');
+  const resetToken = crypto.randomBytes(32).toString("hex");
   this.passwordResetToken = crypto
-    .createHash('sha256')
+    .createHash("sha256")
     .update(resetToken)
-    .digest('hex');
+    .digest("hex");
   this.passwordResetExpires = Date.now() + 30 * 60 * 1000; //10 minutes
   return resetToken;
 };
 
 //Compile schema into model
-const User = mongoose.model('User', userSchema);
+const User = mongoose.model("User", userSchema);
 
 module.exports = User;

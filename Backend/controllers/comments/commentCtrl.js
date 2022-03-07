@@ -1,6 +1,7 @@
-const expressAsyncHandler = require('express-async-handler');
-const Comment = require('../../model/comment/Comment');
-const validateMongodbId = require('../../utils/validateMongodbID');
+const expressAsyncHandler = require("express-async-handler");
+const Comment = require("../../model/comment/Comment");
+const blockUser = require("../../utils/blockUser");
+const validateMongodbId = require("../../utils/validateMongodbID");
 
 //-------------------------------------------------------------
 //Create
@@ -8,9 +9,11 @@ const validateMongodbId = require('../../utils/validateMongodbID');
 const createCommentCtrl = expressAsyncHandler(async (req, res) => {
   //1.Get the user
   const user = req.user;
+  //Check if user is blocked
+  blockUser(user);
   //2.Get the post Id
   const { postId, description } = req.body;
-  console.log(description);
+
   try {
     const comment = await Comment.create({
       post: postId,
@@ -29,7 +32,7 @@ const createCommentCtrl = expressAsyncHandler(async (req, res) => {
 
 const fetchAllCommentsCtrl = expressAsyncHandler(async (req, res) => {
   try {
-    const comments = await Comment.find({}).sort('-created');
+    const comments = await Comment.find({}).sort("-created");
     res.json(comments);
   } catch (error) {
     res.json(error);
@@ -61,7 +64,6 @@ const updateCommentCtrl = expressAsyncHandler(async (req, res) => {
     const update = await Comment.findByIdAndUpdate(
       id,
       {
-        post: req.body?.postId,
         user: req?.user,
         description: req?.body?.description,
       },

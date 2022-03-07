@@ -1,5 +1,5 @@
-const expressAsyncHandler = require('express-async-handler');
-const Category = require('../../model/Category/Category');
+const expressAsyncHandler = require("express-async-handler");
+const Category = require("../../model/Category/Category");
 
 //create
 const createCategoryCtrl = expressAsyncHandler(async (req, res) => {
@@ -18,8 +18,8 @@ const createCategoryCtrl = expressAsyncHandler(async (req, res) => {
 const fetchCategoriesCtrl = expressAsyncHandler(async (req, res) => {
   try {
     const categories = await Category.find({})
-      .populate('user')
-      .sort('-createdAt');
+      .populate("user")
+      .sort("-createdAt");
     res.json(categories);
   } catch (error) {
     res.json(error);
@@ -31,8 +31,8 @@ const fetchCategoryCtrl = expressAsyncHandler(async (req, res) => {
   const { id } = req.params;
   try {
     const category = await Category.findById(id)
-      .populate('user')
-      .sort('-createdAt');
+      .populate("user")
+      .sort("-createdAt");
     res.json(category);
   } catch (error) {
     res.json(error);

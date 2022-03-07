@@ -1,16 +1,16 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const postSchema = new mongoose.Schema(
   {
     title: {
       type: String,
-      required: [true, 'Post title is required'],
+      required: [true, "Post title is required"],
       trim: true,
     },
     //Created by only category
     category: {
       type: String,
-      required: [true, 'Post category is required'],
+      required: [true, "Post category is required"],
     },
     isLiked: {
       type: Boolean,
@@ -27,28 +27,28 @@ const postSchema = new mongoose.Schema(
     likes: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
+        ref: "User",
       },
     ],
     disLikes: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
+        ref: "User",
       },
     ],
     user: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
-      required: [true, 'Please Author is required'],
+      ref: "User",
+      required: [true, "Please Author is required"],
     },
     description: {
       type: String,
-      required: [true, 'Post description is required'],
+      required: [true, "Post description is required"],
     },
     image: {
       type: String,
       default:
-        'https://cdn.pixabay.com/photo/2020/10/25/09/23/seagull-5683637_960_720.jpg',
+        "https://cdn.pixabay.com/photo/2020/10/25/09/23/seagull-5683637_960_720.jpg",
     },
   },
   {
@@ -62,7 +62,14 @@ const postSchema = new mongoose.Schema(
   }
 );
 
+//populate comments
+postSchema.virtual("comments", {
+  ref: "Comment",
+  foreignField: "post",
+  localField: "_id",
+});
+
 //compile
-const Post = mongoose.model('Post', postSchema);
+const Post = mongoose.model("Post", postSchema);
 
 module.exports = Post;
