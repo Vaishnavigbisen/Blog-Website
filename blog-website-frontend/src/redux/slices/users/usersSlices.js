@@ -27,6 +27,7 @@ export const registerUserAction = createAsyncThunk(
     }
   }
 );
+
 //Login
 export const loginUserAction = createAsyncThunk(
   'user/login',
@@ -44,7 +45,7 @@ export const loginUserAction = createAsyncThunk(
         config
       );
       //save user into local storage
-      localStorage.setItem('userInfo', JSON.stringify(userData));
+      localStorage.setItem('userInfo', JSON.stringify(data));
       return data;
     } catch (error) {
       if (!error?.response) {
@@ -55,11 +56,16 @@ export const loginUserAction = createAsyncThunk(
   }
 );
 
+//get user from local storage and place into store
+const userLoginFromStorage = localStorage.getItem('userInfo')
+  ? JSON.parse(localStorage.getItem('userInfo'))
+  : null;
+
 //slices
 const usersSlices = createSlice({
   name: 'users',
   initialState: {
-    userAuth: 'login',
+    userAuth: userLoginFromStorage,
   },
   extraReducers: (builder) => {
     //register

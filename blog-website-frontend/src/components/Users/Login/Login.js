@@ -1,7 +1,10 @@
 import React from 'react';
 import { useFormik } from 'formik';
+import { Redirect } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import * as Yup from 'yup';
 import poster from '../../../img/poster.png';
+import { loginUserAction } from '../../../redux/slices/users/usersSlices';
 
 //Form schema
 const formSchema = Yup.object({
@@ -10,6 +13,7 @@ const formSchema = Yup.object({
 });
 
 const Login = () => {
+  const dispatch = useDispatch();
   //formik
   const formik = useFormik({
     initialValues: {
@@ -18,10 +22,15 @@ const Login = () => {
     },
     onSubmit: (values) => {
       //dispath the action
-      console.log(values);
+      dispatch(loginUserAction(values));
     },
     validationSchema: formSchema,
   });
+
+  //redirect
+  const store = useSelector((state) => state?.users);
+  const { userAuth, loading, serverErr, appErr } = store;
+  if (userAuth) return <Redirect to='/profile' />;
   return (
     <>
       <section className='min-h-screen relative py-20 2xl:py-40 bg-gray-900 overflow-hidden'>
@@ -43,6 +52,12 @@ const Login = () => {
                       {/* Header */}
                       Login to your Account
                     </h3>
+                    {/* display err */}
+                    {serverErr || appErr ? (
+                      <h2 className='text-red-500'>
+                        {serverErr} - {appErr}
+                      </h2>
+                    ) : null}
                     <div className='flex items-center pl-6 mb-3 border border-gray-50 bg-white rounded-full'>
                       <span className='inline-block pr-3 border-r border-gray-50'>
                         <svg
@@ -112,17 +127,31 @@ const Login = () => {
                       {formik.touched.password && formik.errors.password}
                     </div>
                     {/* Login btn */}
-                    <button
-                      type='submit'
-                      className='py-4 w-full bg-purple-500 hover:bg-blue-600 text-white font-bold rounded-full transition duration-200'
-                    >
-                      Login
-                    </button>
+                    {loading ? (
+                      <button
+                        disabled
+                        className='py-4 w-full bg-gray-500 text-white font-bold rounded-full transition duration-200'
+                      >
+                        Loading...
+                      </button>
+                    ) : (
+                      <button
+                        type='submit'
+                        className='py-4 w-full bg-purple
+                        -500 hover:bg-blue
+                        -600 text-white font-bold rounded-full transition duration-200'
+                      >
+                        Login
+                      </button>
+                    )}
                   </form>
                 </div>
               </div>
               <div className='w-full lg:w-3/5 px-4 mb-16 lg:mb-0 order-first lg:order-last'>
-                <span className='flex mb-10 mx-auto items-center justify-center h-20 w-20 bg-purple-500 rounded-lg'>
+                <span
+                  className='flex mb-10 mx-auto items-center justify-center h-20 w-20 bg-purple
+                -500 rounded-lg'
+                >
                   <svg
                     width='37'
                     height='37'
